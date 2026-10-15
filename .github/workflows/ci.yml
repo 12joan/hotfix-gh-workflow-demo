@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Run demo tests'
-        run: echo "Testing..." && sleep 25 && echo "Done"
+        run: echo "Testing..." && sleep 10 && echo "Done"
 
   deploy:
-    if: ${{ github.ref == 'main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: test
     runs-on: ubuntu-latest
     concurrency:
@@ -19,4 +19,4 @@ jobs:
       cancel-in-progress:  ${{ contains(github.event.head_commit.message, '[Hotfix]') }}
     steps:
       - name: 'Deploying'
-        run: echo "Deploying..." && sleep 45 && echo "Done"
+        run: echo "Deploying..." && sleep 25 && echo "Done"
