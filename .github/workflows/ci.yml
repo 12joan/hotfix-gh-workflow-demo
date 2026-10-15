@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: deploy
-      queue: ${{ contains(github.event.head_commit.message, '[Hotfix]') && 'single' || 'max' }}
-      cancel-in-progress:  ${{ contains(github.event.head_commit.message, '[Hotfix]') }}
+      queue: ${{ contains(github.event.head_commit.message, '[hotfix]') && 'single' || 'max' }}
+      cancel-in-progress:  ${{ contains(github.event.head_commit.message, '[hotfix]') }}
     steps:
       - name: 'Deploying'
         run: echo "Deploying..." && sleep 25 && echo "Done"
