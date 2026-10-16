@@ -18,6 +18,8 @@ jobs:
       group: deploy
       queue: ${{ contains(github.event.head_commit.message, '[hotfix]') && 'single' || 'max' }}
       cancel-in-progress:  ${{ contains(github.event.head_commit.message, '[hotfix]') }}
+    permissions:
+      actions: read
     steps:
       - name: 'Check if a later deploy has finished first'
         run: |
@@ -34,5 +36,7 @@ jobs:
             echo "Cancelling since workflow run #$LAST_DEPLOYED finished first"
             exit 1
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: 'Deploying'
         run: echo "Deploying..." && sleep 25 && echo "Done"
