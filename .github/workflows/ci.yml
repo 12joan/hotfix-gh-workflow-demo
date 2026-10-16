@@ -38,5 +38,6 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
       - name: 'Deploying'
         run: echo "Deploying..." && sleep 25 && echo "Done"
