@@ -32,12 +32,20 @@ jobs:
               --jq .[0].number \
               --limit 1
           )"
-          if [[ -n "$LAST_DEPLOYED" ]] && [[ "$LAST_DEPLOYED" -gt "${{ github.run_number }}" ]]; then
-            echo "Cancelling since workflow run #$LAST_DEPLOYED finished first"
-            exit 1
+
+          if [[ -n "$LAST_DEPLOYED" ]]; then
+            echo "The last completed workflow run was #$LAST_DEPLOYED"
+
+            if [[ "$LAST_DEPLOYED" -gt "${{ github.run_number }}" ]]; then
+              echo "Cancelling since workflow run #$LAST_DEPLOYED finished first"
+              exit 1
+            fi
+          else
+            echo "There is no previous completed workflow run"
           fi
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+
       - name: 'Deploying'
         run: echo "Deploying..." && sleep 25 && echo "Done"
