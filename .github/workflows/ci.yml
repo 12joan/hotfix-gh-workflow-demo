@@ -19,5 +19,20 @@ jobs:
       queue: ${{ contains(github.event.head_commit.message, '[hotfix]') && 'single' || 'max' }}
       cancel-in-progress:  ${{ contains(github.event.head_commit.message, '[hotfix]') }}
     steps:
+      - name: 'Check if a later deploy has finished first'
+        run: |
+          LAST_DEPLOYED="$(
+            gh run list \
+              --workflow '${{ github.workflow }}' \
+              --branch main \
+              --status completed \
+              --json number \
+              --jq .[0].number \
+              --limit 1
+          )"
+          if [[ -n "$LAST_DEPLOYED" ]] && [[ "$LAST_DEPLOYED" -gt "${{ github.run_number }}" ]]; then
+            echo "Cancelling since workflow run #$LAST_DEPLOYED finished first"
+            exit 1
+          fi
       - name: 'Deploying'
         run: echo "Deploying..." && sleep 25 && echo "Done"
